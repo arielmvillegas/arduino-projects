@@ -1,0 +1,98 @@
+COMP 522
+Final Project
+
+Arduino control's a distance measurement system using an ultrasonic sensor, control LEDS, and a buzzer based on the measured distance. 
+
+'distance'
+	- if less than 50 cm, the RED LED and the buzzer are turned on indicating object is really close.
+
+	- if between 50 cm and 100 cm, YELLOW LED is all while the buzzer still being activated.
+
+	- if greater than or equal to 100cm, the GREEN LED is turned on indicating that the object is far away or not in sight indicating that the buzzer is off.
+
+
+By running this code on my Arduino board, you can observe the behavior of the LEDs and the buzzer based on the measured distance.
+
+Task Definitions:
+'distanceTask': task responsible for measuring the distance using an ultrasonic sensor.
+	- continuously tirggers the sensor, measures the echo pulse duration, and calculates the distance in centimeters.
+	- updates the 'distance' and 'new_delay' variables baased on the measured distance.
+
+'ledTask': controls LEDs and buzzer based on measured distance. 
+	- checks 'distance' values and determines which LEDs and the buzzer should be turned on or off based on different ranges.
+
+triggerPin (pin 6) : of the ultrasonic sensor
+echoPin (5): echo pin of the ultrasonic sensor
+buzzerPin (2): buzzer
+
+'distance'
+	- if less than 50 cm, the RED LED and the buzzer are turned on indicating object is really close.
+
+	- if between 50 cm and 100 cm, YELLOW LED is all while the buzzer still being activated.
+
+	- if greater than or equal to 100cm, the GREEN LED is turned on indicating that the object is far away or not in sight indicating that the buzzer is off.
+
+FreeRTOS Setup and Exection:
+	- In the 'setup' function, pin modes are set, and tasks are created using 'xTaskCreate()'.
+	- FreeRTOS scheduler started with 'vTaskStartScheduler()'
+	- 'loop()' function is empty because execution is handled by the FreeRTOS tasks.
+
+FreeRTOS Setup and Exection:
+	- In the 'setup' function, pin modes are set, and tasks are created using 'xTaskCreate()'.
+	- FreeRTOS scheduler started with 'vTaskStartScheduler()'
+	- 'loop()' function is empty because execution is handled by the FreeRTOS tasks.
+
+                   +-------------+	
+                   |  Start-Up   |		initial state of the program
+                   +-------------+		
+                          	|
+                          	v
+                  +-----------------+	distance is measured using the ultrasonic
+                  | Measure Distance|	sensor.
+                  +-----------------+	
+                          	|
+                          	v
+          +----------------------------+
+          |   Check Distance Range    |		state where the measured distance is evaluated to
+          +----------------------------+	determine the appropriate action based
+          					|                        		
+          v      			|           
+          |      			|
+   +---------+   			|     	+--------------	+ 	if distance is greater than 100 cm or object not present
+   | Distance|   			|     	| Green LED on 	| 	will be green
+   | > 100cm |--------------|------>|				|
+   +---------+   			|		+---------------+
+          |					|
+          |					|
+          |      			|     	
+          v      			|      	
+   +--------------+         |		+---------------+            		
+   | Distance <  |          |       | Yellow LED on	|	if distance is less than 100 cm but greater than 50 cm.
+   | 100cm       |----------|------>|				|
+   +--------------+                 +---------------+    	
+          |					|
+          |					|
+          |      			|                      	
+          v      			|                      	
+   +--------------+			|		+--------------+   if distance is less than 50 cm then red light is activated.      	             	
+   | Distance <   | 		|       |			   |
+   | 50cm         |---------------->|Red LED on	   |     	
+   +--------------+                 +--------------+
+             	
+                    	
+
+
+Wiring Outline:
+
+Ultrasonic Sensor:
+- VCC pin (Power)   -> 5V or 3.3V on Arduino
+- GND pin (Ground)  -> GND on Arduino
+- Trig pin          -> trigPin (Pin 6) on Arduino
+- Echo pin          -> echoPin (Pin 5) on Arduino
+
+LEDs and Buzzer:
+- Green LED Anode   -> greenPin (Pin 11) on Arduino
+- Yellow LED Anode  -> yellowPin (Pin 12) on Arduino
+- Red LED Anode     -> redPin (Pin 13) on Arduino
+- Buzzer Positive   -> buzzerPin (Pin 2) on Arduino
+- LED and Buzzer Cathodes and GND -> GND on Arduino
